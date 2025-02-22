@@ -55,6 +55,14 @@ interface Analytics {
     readerEngagementRate: number;
 }
 
+interface BrandDeal {
+    _id: string;
+    name: string;
+    product: string;
+    description: string;
+    status: string;
+}
+
 const storyData: Story = {
     title: "The Chronicles of Aethoria",
     description: "An epic fantasy tale of magic and adventure",
@@ -142,6 +150,7 @@ export default function MyStoryDashboard() {
     const [direction, setDirection] = useState("")
     const [storyStatus, setStoryStatus] = useState("Ongoing")
     const [aiEnabled, setAiEnabled] = useState(false)
+    const [brandDeals, setBrandDeals] = useState<BrandDeal[]>([])
     const { storyId } = useParams();
     useEffect(() => {
         fetch(`/api/stories/details?storyId=${storyId}`)
@@ -151,6 +160,13 @@ export default function MyStoryDashboard() {
                 console.log(data)
                 setAiEnabled(data.aiEnabled)
                 setStoryStatus(data.status)
+            })
+
+        fetch(`/api/getDeals?storyId=${storyId}`)
+            .then(res => res.json())
+            .then(data => {
+                setBrandDeals(data.existingBrandDeals)
+                console.log(data)
             })
     }, [storyId])
 
@@ -198,6 +214,22 @@ export default function MyStoryDashboard() {
         { name: "Ch 5", count: 3100 },
     ]
 
+    const handleStatusChange = async (value: string, index: number) => {
+        console.log(value, index)
+        const payload = {
+            status: value,
+            dealId: brandDeals[index]._id,
+        }
+        const res = await fetch(`/api/getDeals`, {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+        if (res.ok) {
+            console.log("Status updated")
+        } else {
+            console.log("Error updating status")
+        }
+    }
     return (
         <div className="bg-violet-200 dark:bg-bg">
             <NavBar />
@@ -461,6 +493,39 @@ export default function MyStoryDashboard() {
                                 <Label>Reader Engagement Rate</Label>
                                 <p className="text-2xl font-bold">{analyticsData.readerEngagementRate}%</p>
                             </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Brand Deals Section */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Brand Deals</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {brandDeals.map((deal, index) => (
+                                <div key={index} className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="font-bold">{deal.name}</h3>
+                                        <p className="text-sm text-gray-200">{deal.product}</p>
+                                        <p className="text-sm text-gray-200 mb-2">{deal.description}</p>
+                                        <Select onValueChange={(value) => handleStatusChange(value, index)} defaultValue={deal.status}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="pending">Pending</SelectItem>
+                                                <SelectItem value="approved">Approved</SelectItem>
+                                                <SelectItem value="rejected">Rejected</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <Button variant="reverse">
+                                        <Edit3 className="mr-2 h-4 w-4" /> Edit
+                                    </Button>
+                                </div>
+                            ))}
                         </div>
                     </CardContent>
                 </Card>
