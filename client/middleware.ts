@@ -8,11 +8,11 @@ export function middleware(request: NextRequest) {
 
     if (request.nextUrl.pathname === '/') {
         if (role === 'Creator') {
-            return NextResponse.redirect(new URL('/creator', request.url))
+            return NextResponse.redirect(new URL('/creator/dashboard', request.url))
         } else if (role === 'Brand') {
             return NextResponse.redirect(new URL('/brand', request.url))
         } else if (role === 'Reader') {
-            return NextResponse.redirect(new URL('/reader', request.url))
+            return NextResponse.redirect(new URL('/reader/dashboard', request.url))
         }
         return NextResponse.next()
     }
