@@ -11,4 +11,4 @@ deploy-points:
 	npx hardhat run ignition/modules/Points.ts --network amoy
 
 verify-points:
-	npx hardhat verify --network amoy 0xb218f3F1061D680794848B2e16b1Be3F3F329dbf
+	npx hardhat verify --network amoy 0x4cB490beb0da5538A569526D689710b1C3A74c3C

@@ -12,6 +12,7 @@ import NavBar from "@/components/functions/NavBar"
 import { useAccount } from "wagmi"
 import { usePrivy } from "@privy-io/react-auth"
 import { useRouter } from "next/navigation"
+import { UserInterface } from "@/types"
 
 export default function FunUserRegistration() {
     const [username, setUsername] = useState("")
@@ -20,6 +21,8 @@ export default function FunUserRegistration() {
     const [userAddress, setUserAddress] = useState<`0x${string}` | null>(null)
     const { address } = useAccount()
     const { user } = usePrivy()
+    const [role, setRole] = useState<string | null>(null);
+    const [userData, setUserData] = useState<UserInterface | null>(null);
     const router = useRouter()
 
     const roles = [
@@ -32,21 +35,21 @@ export default function FunUserRegistration() {
         const walletAddress = address || user?.wallet?.address;
         if (walletAddress && walletAddress.startsWith('0x')) {
             setUserAddress(walletAddress as `0x${string}`)
-            checkUser()
+            getUser();
         }
     }, [address, user])
 
-    const checkUser = async () => {
+    const getUser = async () => {
         const response = await fetch(`/api/getUser?address=${userAddress}`);
         const data = await response.json();
         if (data.user) {
-            if (selectedRole === "Creator") {
-                router.push("/creator/dashboard");
-            } else {
-                router.push("/reader/dashboard");
+            setUserData(data.user);
+            setRole(data.user.role);
+            if (data.user.role) {
+                router.push(`/${data.user.role.toLowerCase()}/dashboard`);
             }
         }
-    }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -68,7 +71,7 @@ export default function FunUserRegistration() {
         console.log(data)
         if (data.success) {
             setTimeout(() => {
-                checkUser();
+                getUser();
                 confetti({
                     particleCount: 100,
                     spread: 70,
@@ -133,15 +136,7 @@ export default function FunUserRegistration() {
                                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 transform hover:scale-105"
                                 disabled={!username || !selectedRole || isSubmitting}
                             >
-                                {isSubmitting ? (
-                                    <motion.div
-                                        className="h-5 w-5 rounded-full border-t-2 border-white"
-                                        animate={{ rotate: 360 }}
-                                        transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                                    />
-                                ) : (
-                                    "Let the adventure begin!"
-                                )}
+                                {isSubmitting ? "Submitting..." : "Let the adventure begin!"}
                             </Button>
                         </form>
                     </CardContent>
@@ -150,4 +145,3 @@ export default function FunUserRegistration() {
         </div>
     )
 }
-

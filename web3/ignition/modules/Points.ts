@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 async function main() {
     // Get the ContractFactory for the contract
     console.log("Deploying PointToken...");
-    const PointToken = await ethers.deployContract("PointToken");
+    const PointToken = await ethers.deployContract("StoryTokenFactory");
 
     // console.log("Deploying PointToken...");
 

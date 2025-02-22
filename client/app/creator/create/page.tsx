@@ -12,7 +12,8 @@ import NavBar from "@/components/functions/NavBar"
 import { CharacterForm } from "@/components/CharacterForm"
 import type { Character } from "@/components/CharacterForm"
 import { usePrivy } from "@privy-io/react-auth"
-
+import { useWriteContract } from 'wagmi'
+import { pointTokenAbi, pointTokenAddress } from "../abi"
 
 export default function CreateStoryAgent() {
     const { user } = usePrivy()
@@ -51,6 +52,8 @@ export default function CreateStoryAgent() {
         }
     })
 
+    const { writeContractAsync, data: storyTokenAddress } = useWriteContract()
+
     const handleStorySettingsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setStorySettings((prev) => ({ ...prev, [name]: value }))
@@ -81,6 +84,14 @@ export default function CreateStoryAgent() {
         })
         const data = await response.json()
         console.log(data)
+
+        writeContractAsync({
+            abi: pointTokenAbi,
+            address: pointTokenAddress,
+            functionName: "createStoryToken",
+            args: [parseInt(data.storyId, 16), "Talk", "$TLK"],
+        })
+        console.log("Token address", storyTokenAddress);
         // TODO: Redirect to story page
     }
 

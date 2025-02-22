@@ -17,6 +17,7 @@ import { formatEther } from "viem";
 import { UserInterface } from "@/types";
 import { abi, contractAddress } from "@/app/abi";
 import { useRole } from "@/app/_contexts/roleContext";
+import { useRouter } from "next/navigation";
 
 export default function LoginButton() {
     const { ready, authenticated, login, logout, user } = usePrivy();
@@ -25,11 +26,12 @@ export default function LoginButton() {
     const [userData, setUserData] = useState<UserInterface | null>(null);
     const { address } = useAccount();
     const { disconnect } = useDisconnect();
-    const { login: roleLogin, logout: roleLogout } = useRole();
+    const { login: roleLogin, roleLogout, role } = useRole();
     const balance = useBalance({
         address: address,
         chainId: polygonAmoy.id,
     });
+    const router = useRouter()
 
     const result = useReadContract({
         abi,
@@ -42,15 +44,17 @@ export default function LoginButton() {
         if (address) {
             setUserAddress(address || user?.wallet?.address);
             setTokenBalance(result.data ? result.data.toString() : '0');
-            roleLogin(userData?.role)
+            roleLogin(userData?.role, userAddress)
+            // router.push("/");
         }
     }, [address, result]);
 
     const handleLogout = () => {
+        roleLogout()
         logout();
         disconnect();
         setUserAddress(null);
-        roleLogout()
+        router.push("/");
     };
 
     const truncateAddress = (address: string) => {
@@ -74,8 +78,17 @@ export default function LoginButton() {
         }
     };
 
+    const handleLogin = async () => {
+        login();
+        if (!role) {
+            router.push("/setup");
+        } else {
+            router.push("/");
+        }
+    }
+
     if (!ready || !authenticated || !userAddress || !user?.wallet?.address || !walletAddress) {
-        return <Button onClick={login}>Connect Wallet</Button>;
+        return <Button onClick={() => handleLogin()}>Connect Wallet</Button>;
     }
 
     return (
