@@ -69,18 +69,6 @@ export default function NavBar() {
                         </Link>
                     )}
                     <Link
-                        href="#features"
-                        className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
-                    >
-                        Features
-                    </Link>
-                    <Link
-                        href="/creator/dashboard"
-                        className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
-                    >
-                        Creators
-                    </Link>
-                    <Link
                         href="/reader/dashboard"
                         className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
                     >

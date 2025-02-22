@@ -13,7 +13,7 @@ import { CharacterForm } from "@/components/CharacterForm"
 import type { Character } from "@/components/CharacterForm"
 import { usePrivy } from "@privy-io/react-auth"
 import { useWriteContract } from 'wagmi'
-import { pointTokenAbi, pointTokenAddress } from "../abi"
+import { pointTokenAbi, pointTokenAddress } from "../../abi"
 
 export default function CreateStoryAgent() {
     const { user } = usePrivy()
@@ -84,12 +84,14 @@ export default function CreateStoryAgent() {
         })
         const data = await response.json()
         console.log(data)
+        console.log("tokenId", data.storyId)
+        console.log("story id", parseInt(data.storyId, 10))
 
-        writeContractAsync({
+        await writeContractAsync({
             abi: pointTokenAbi,
             address: pointTokenAddress,
             functionName: "createStoryToken",
-            args: [parseInt(data.storyId, 16), "Talk", "$TLK"],
+            args: [BigInt(data.storyId), "Talk", "$TLK"],
         })
         console.log("Token address", storyTokenAddress);
         // TODO: Redirect to story page
