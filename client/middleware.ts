@@ -26,5 +26,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: ['/', '/creator/*', '/brand', '/reader/*', 'token/']
+    matcher: ['/', '/creator/:path*', '/brand', '/reader/:path*', 'token/']
 }
