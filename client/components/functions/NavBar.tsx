@@ -23,13 +23,13 @@ export default function NavBar() {
                         Features
                     </Link>
                     <Link
-                        href="#creators"
+                        href="/creator/dashboard"
                         className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
                     >
                         Creators
                     </Link>
                     <Link
-                        href="#readers"
+                        href="/reader/dashboard"
                         className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
                     >
                         Readers

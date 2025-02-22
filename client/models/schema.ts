@@ -189,10 +189,46 @@ const ChapterSchema = new mongoose.Schema({
 );
 
 
+const BrandSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    product: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    storyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Story',
+        required: true
+    },
+    brandId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending',
+        required: true
+    }
+},
+    {
+        timestamps: true
+    }
+);
+
 const Story = mongoose.models.Story || mongoose.model('Story', StorySchema);
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Chapter = mongoose.models.Chapter || mongoose.model('Chapter', ChapterSchema);
 const StorySettings = mongoose.models.StorySettings || mongoose.model('StorySettings', StorySettingsSchema);
 const StoryStatus = mongoose.models.StoryStatus || mongoose.model('StoryStatus', StoryStatusSchema);    
 const EndgameProtocol = mongoose.models.EndgameProtocol || mongoose.model('EndgameProtocol', EndgameProtocolSchema);
-export { Story, User, Chapter, StorySettings, StoryStatus, EndgameProtocol };
+const Brand = mongoose.models.Brand || mongoose.model('Brand', BrandSchema);    
+export { Story, User, Chapter, StorySettings, StoryStatus, EndgameProtocol, Brand };

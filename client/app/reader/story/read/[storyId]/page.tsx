@@ -63,8 +63,21 @@ export default function StoryReader() {
                         Chapter {currentChapter + 1} of {story?.chapters.length ?? 0}
                     </div>
                 </div>
-                <Progress value={progress} className="h-1" />
+                <Progress value={progress} className="h-2" />
             </div>
+
+            {/* Main Content */}
+            <main className="pt-[73px] pb-20 px-4 md:px-0">
+                <div className="max-w-prose mx-auto mt-8">
+                    <h1 className="text-2xl font-bold text-center">{story?.title}</h1>
+                    <h2 className="text-xl font-semibold text-center mt-2">
+                        Chapter {currentChapter + 1}: {story?.chapters[currentChapter].title}
+                    </h2>
+                    <article className="prose prose-purple prose-lg z-30 mt-4">
+                        <div className="whitespace-pre-wrap font-serif">{story?.chapters[currentChapter].content}</div>
+                    </article>
+                </div>
+            </main>
 
             {/* Chapter Sidebar */}
             <div
@@ -95,15 +108,6 @@ export default function StoryReader() {
                 </ScrollArea>
             </div>
 
-            {/* Main Content */}
-            <main className="pt-[73px] pb-20 px-4 md:px-0">
-                <div className="max-w-prose mx-auto mt-8">
-                    <article className="prose prose-purple prose-lg z-30">
-                        <div className="whitespace-pre-wrap font-serif">{story?.chapters[currentChapter].content}</div>
-                    </article>
-                </div>
-            </main>
-
             {/* Bottom Navigation */}
             <div className="fixed bottom-0 left-0 right-0 z-50 border-t p-4 bg-bg">
                 <div className="max-w-prose mx-auto flex justify-between">
@@ -120,4 +124,3 @@ export default function StoryReader() {
         </div>
     )
 }
-

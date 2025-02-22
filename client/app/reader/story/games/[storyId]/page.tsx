@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Book, Trophy, PieChart, Zap, ArrowLeft } from "lucide-react"
 import { useParams } from "next/navigation"
+import NavBar from "@/components/functions/NavBar"
+import { useRouter } from "next/navigation" 
 
 type PollOption = 'option1' | 'option2' | 'option3' | 'option4';
 type PollVotes = Record<PollOption, number>;
@@ -113,20 +115,25 @@ export default function StoryMiniGame() {
   const [prediction, setPrediction] = useState("")
   const [userStats, setUserStats] = useState({ quizzes: 0, polls: 0, predictions: 0 })
   const [showAchievement, setShowAchievement] = useState(false)
-
+  const router = useRouter()
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
 
   // Replace the Set with a single string to track the selected option
   const [selectedPollOption, setSelectedPollOption] = useState<string | null>(null)
 
   const fetchGames = async () => {
-    const response = await fetch(`/api/createGames?storyId=${storyId}`)
-    const data = await response.json()
-    console.log("Data: ", data)
-    setQuiz(data.quiz)
-    setPoll(data.poll)
-    setPredictions(data.predictions)
+    try {
+      const response = await fetch(`/api/createGames?storyId=${storyId}`)
+      const data = await response.json()
+      console.log("Data: ", data)
+      setQuiz(data.quiz)
+      setPoll(data.poll)
+      setPredictions(data.predictions)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -135,6 +142,7 @@ export default function StoryMiniGame() {
 
   const handleAnswerSubmit = () => {
     const currentQuestion = quiz.questions[currentQuestionIndex];
+    // Check and update score before handling question transitions
     if (selectedAnswer === currentQuestion.correctAnswer) {
       setQuizScore(prevScore => prevScore + 1);
     }
@@ -145,7 +153,12 @@ export default function StoryMiniGame() {
     } else {
       setQuizCompleted(true);
       setUserStats(prev => ({ ...prev, quizzes: prev.quizzes + 1 }));
-      if (quizScore === quiz.questions.length - 1 && selectedAnswer === currentQuestion.correctAnswer) {
+      // Check the final score including the last question
+      const finalScore = selectedAnswer === currentQuestion.correctAnswer ? 
+        quizScore + 1 : quizScore;
+      
+      // Show achievement if all questions are correct
+      if (finalScore === quiz.questions.length) {
         setShowAchievement(true);
         setTimeout(() => setShowAchievement(false), ACHIEVEMENT_CONFIG.displayDuration);
       }
@@ -201,14 +214,16 @@ export default function StoryMiniGame() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-bg">
-      <Card className="max-w-4xl mx-auto">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <Button variant="neutral" size="icon">
+    <>
+      <NavBar />
+      <div className="min-h-screen p-8 bg-bg">
+        <Card className="max-w-4xl mx-auto">
+          <CardHeader>
+          <div className="flex items-center">
+            <Button variant="neutral" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="h-6 w-6" />
             </Button>
-            <CardTitle className="text-3xl font-bold text-center">
+            <CardTitle className="text-3xl font-bold text-center flex-grow">
               {GAME_CONFIG.title}
             </CardTitle>
           </div>
@@ -233,29 +248,41 @@ export default function StoryMiniGame() {
                   <CardDescription>{quiz.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {!quizCompleted ? (
-                    <div>
-                      <h3 className="text-xl font-semibold mb-4">
-                        Question {currentQuestionIndex + 1} of {quiz.questions.length}
-                      </h3>
-                      <p className="mb-4">{quiz.questions[currentQuestionIndex].question}</p>
-                      <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
-                        {quiz.questions[currentQuestionIndex].options.map((option, index) => (
-                          <div key={index} className="flex items-center space-x-2 mb-2">
-                            <RadioGroupItem value={option} id={`option-${index}`} />
-                            <Label htmlFor={`option-${index}`}>{option}</Label>
-                          </div>
+                  {isLoading ? (
+                    <div className="p-6 space-y-4">
+                      <div className="h-8 bg-violet-500/50 rounded animate-pulse" />
+                      <div className="h-4 bg-violet-500/50 rounded animate-pulse w-3/4" />
+                      <div className="space-y-2 mt-8">
+                        {[1, 2, 3, 4].map((i) => (
+                          <div key={i} className="h-12 bg-violet-500/50 rounded animate-pulse" />
                         ))}
-                      </RadioGroup>
+                      </div>
                     </div>
                   ) : (
-                    <div className="text-center">
-                      <h3 className="text-2xl font-bold mb-4">Quiz Completed!</h3>
-                      <p className="text-xl mb-4">
-                        Your Score: {quizScore} / {quiz.questions.length}
-                      </p>
-                      <Button onClick={resetQuiz}>Try Again</Button>
-                    </div>
+                    !quizCompleted ? (
+                      <div>
+                        <h3 className="text-xl font-semibold mb-4">
+                          Question {currentQuestionIndex + 1} of {quiz.questions.length}
+                        </h3>
+                        <p className="mb-4">{quiz.questions[currentQuestionIndex].question}</p>
+                        <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
+                          {quiz.questions[currentQuestionIndex].options.map((option, index) => (
+                            <div key={index} className="flex items-center space-x-2 mb-2">
+                              <RadioGroupItem value={option} id={`option-${index}`} />
+                              <Label htmlFor={`option-${index}`}>{option}</Label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <h3 className="text-2xl font-bold mb-4">Quiz Completed!</h3>
+                        <p className="text-xl mb-4">
+                          Your Score: {quizScore} / {quiz.questions.length}
+                        </p>
+                        <Button onClick={resetQuiz}>Try Again</Button>
+                      </div>
+                    )
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
@@ -285,33 +312,50 @@ export default function StoryMiniGame() {
                   <CardDescription>{poll.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <h3 className="text-xl font-semibold mb-4">{poll.question}</h3>
-                  <div className="space-y-4">
-                    {poll.options.map((option) => (
-                      <div key={option.id} className="flex items-center justify-between">
-                        <Button 
-                          onClick={() => handlePollVote(option.id as PollOption)} 
-                          variant={selectedPollOption === option.id ? "default" : "reverse"}
-                          className="w-full mr-4"
-                        >
-                          {option.label}
-                          {selectedPollOption === option.id && " ✓"}
-                        </Button>
-                        <div className="w-1/3 flex items-center gap-2">
-                          <Progress
-                            value={calculatePollPercentage(pollVotes[option.id as PollOption])}
-                            className="flex-1"
-                          />
-                          <span className="text-sm w-12">
-                            {Math.round(calculatePollPercentage(pollVotes[option.id as PollOption]))}%
-                          </span>
-                        </div>
+                  {isLoading ? (
+                    <div className="p-6 space-y-4">
+                      <div className="h-8 bg-violet-500/50 rounded animate-pulse" />
+                      <div className="h-4 bg-violet-500/50 rounded animate-pulse w-2/3" />
+                      <div className="space-y-3 mt-8">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="flex items-center gap-4">
+                            <div className="h-10 bg-violet-500/50 rounded animate-pulse flex-grow" />
+                            <div className="h-4 bg-violet-500/50 rounded animate-pulse w-24" />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <p className="text-sm mt-4 text-right">
-                    Total votes: {getTotalVotes()}
-                  </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold mb-4">{poll.question}</h3>
+                      <div className="space-y-4">
+                        {poll.options.map((option) => (
+                          <div key={option.id} className="flex items-center justify-between">
+                            <Button 
+                              onClick={() => handlePollVote(option.id as PollOption)} 
+                              variant={selectedPollOption === option.id ? "default" : "reverse"}
+                              className="w-full mr-4"
+                            >
+                              {option.label}
+                              {selectedPollOption === option.id && " ✓"}
+                            </Button>
+                            <div className="w-1/3 flex items-center gap-2">
+                              <Progress
+                                value={calculatePollPercentage(pollVotes[option.id as PollOption])}
+                                className="flex-1"
+                              />
+                              <span className="text-sm w-12">
+                                {Math.round(calculatePollPercentage(pollVotes[option.id as PollOption]))}%
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-sm mt-4 text-right">
+                        Total votes: {getTotalVotes()}
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -322,16 +366,25 @@ export default function StoryMiniGame() {
                   <CardDescription>{predictions.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <Label htmlFor="prediction">Your Prediction</Label>
-                    <Input
-                      id="prediction"
-                      placeholder={predictions.inputPlaceholder}
-                      value={prediction}
-                      onChange={(e) => setPrediction(e.target.value)}
-                    />
-                    <Button onClick={handlePredictionSubmit}>Submit Prediction</Button>
-                  </div>
+                  {isLoading ? (
+                    <div className="p-6 space-y-4">
+                      <div className="h-8 bg-violet-500/50 rounded animate-pulse" />
+                      <div className="h-4 bg-violet-500/50 rounded animate-pulse w-1/2" />
+                      <div className="h-24 bg-violet-500/50 rounded animate-pulse mt-8" />
+                      <div className="h-10 bg-violet-500/50 rounded animate-pulse w-32" />
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <Label htmlFor="prediction">Your Prediction</Label>
+                      <Input
+                        id="prediction"
+                        placeholder={predictions.inputPlaceholder}
+                        value={prediction}
+                        onChange={(e) => setPrediction(e.target.value)}
+                      />
+                      <Button onClick={handlePredictionSubmit}>Submit Prediction</Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -389,6 +442,7 @@ export default function StoryMiniGame() {
         </CardContent>
       </Card>
     </div>
+    </>
   )
 }
 

@@ -40,7 +40,11 @@ export default function FunUserRegistration() {
         const response = await fetch(`/api/getUser?address=${userAddress}`);
         const data = await response.json();
         if (data.user) {
-            router.push("/dashboard");
+            if (selectedRole === "Creator") {
+                router.push("/creator/dashboard");
+            } else {
+                router.push("/reader/dashboard");
+            }
         }
     }
 

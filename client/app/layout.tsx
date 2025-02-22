@@ -5,6 +5,7 @@ import Providers from "./providers/provider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Red_Hat_Text } from "next/font/google";
 import { RoleProvider } from "./_contexts/roleContext";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,7 +47,8 @@ export default function RootLayout({
             >
               {children}
             </ThemeProvider>
-          </Providers>
+            </Providers>
+          <Toaster />
         </RoleProvider>
       </body>
     </html>

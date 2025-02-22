@@ -122,7 +122,7 @@ function StoryCard({ story, isCurrentStory }: { story: any, isCurrentStory: bool
                   </p>
                 </CardContent>
                 <CardFooter className="">
-                  <Button variant="reverse" className="w-full justify-between group" onClick={() => router.push(`/myStory/${story.id}`)}>
+                  <Button variant="reverse" className="w-full justify-between group" onClick={() => router.push(`/creator/story/${story.id}`)}>
                     {isCurrentStory ? (
                       <>
                         Continue Writing
@@ -162,7 +162,7 @@ function StoryCard({ story, isCurrentStory }: { story: any, isCurrentStory: bool
             </p>
           </CardContent>
           <CardFooter className="">
-            <Button variant="reverse" className="w-full justify-between group" onClick={() => router.push(`/myStory/${story.id}`)}>
+            <Button variant="reverse" className="w-full justify-between group" onClick={() => router.push(`/creator/story/${story.id}`)}>
               {isCurrentStory ? (
                 <>
                   Continue Writing
