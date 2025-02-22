@@ -116,7 +116,11 @@ const StorySchema = new mongoose.Schema({
         ref: 'User',
         required: true
     }
-});
+},
+    {
+        timestamps: true
+    }
+);
 
 const StoryStatusSchema = new mongoose.Schema({
     story: {
@@ -178,7 +182,11 @@ const ChapterSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     }
-});
+},
+    {
+        timestamps: true
+    }
+);
 
 
 const Story = mongoose.models.Story || mongoose.model('Story', StorySchema);

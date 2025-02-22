@@ -117,6 +117,8 @@ export default function StoryMiniGame() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState("")
 
+  // Replace the Set with a single string to track the selected option
+  const [selectedPollOption, setSelectedPollOption] = useState<string | null>(null)
 
   const fetchGames = async () => {
     const response = await fetch(`/api/createGames?storyId=${storyId}`)
@@ -132,25 +134,46 @@ export default function StoryMiniGame() {
   }, [storyId])
 
   const handleAnswerSubmit = () => {
-    if (selectedAnswer === QUIZ_CONFIG.questions[currentQuestionIndex].correctAnswer) {
-      setQuizScore(quizScore + 1)
+    const currentQuestion = quiz.questions[currentQuestionIndex];
+    if (selectedAnswer === currentQuestion.correctAnswer) {
+      setQuizScore(prevScore => prevScore + 1);
     }
-    if (currentQuestionIndex < QUIZ_CONFIG.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1)
-      setSelectedAnswer("")
+
+    if (currentQuestionIndex < quiz.questions.length - 1) {
+      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+      setSelectedAnswer("");
     } else {
-      setQuizCompleted(true)
-      setUserStats((prev) => ({ ...prev, quizzes: prev.quizzes + 1 }))
-      if (quizScore === QUIZ_CONFIG.questions.length) {
-        setShowAchievement(true)
-        setTimeout(() => setShowAchievement(false), ACHIEVEMENT_CONFIG.displayDuration)
+      setQuizCompleted(true);
+      setUserStats(prev => ({ ...prev, quizzes: prev.quizzes + 1 }));
+      if (quizScore === quiz.questions.length - 1 && selectedAnswer === currentQuestion.correctAnswer) {
+        setShowAchievement(true);
+        setTimeout(() => setShowAchievement(false), ACHIEVEMENT_CONFIG.displayDuration);
       }
     }
-  }
+  };
 
   const handlePollVote = (option: PollOption) => {
-    setPollVotes((prev) => ({ ...prev, [option]: prev[option] + 1 }))
-    setUserStats((prev) => ({ ...prev, polls: prev.polls + 1 }))
+    // If clicking the same option, do nothing
+    if (selectedPollOption === option) {
+      return;
+    }
+
+    // If there was a previous selection, decrement its count
+    if (selectedPollOption) {
+      setPollVotes(prev => ({
+        ...prev,
+        [selectedPollOption as keyof typeof prev]: Math.max(0, prev[selectedPollOption as keyof typeof prev] - 1)
+      }))
+    }
+
+    // Update the new selection and increment its count
+    setPollVotes(prev => ({ ...prev, [option]: prev[option] + 1 }))
+    setSelectedPollOption(option)
+    
+    // Only increment polls stat if it's a new vote
+    if (!selectedPollOption) {
+      setUserStats(prev => ({ ...prev, polls: prev.polls + 1 }))
+    }
   }
 
   const handlePredictionSubmit = () => {
@@ -166,6 +189,16 @@ export default function StoryMiniGame() {
     setCurrentQuestionIndex(0)
     setSelectedAnswer("")
   }
+
+  const getTotalVotes = () => {
+    return Object.values(pollVotes).reduce((sum, votes) => sum + votes, 0);
+  };
+
+  const calculatePollPercentage = (votes: number) => {
+    const totalVotes = getTotalVotes();
+    if (totalVotes === 0) return 0;
+    return (votes / totalVotes) * 100;
+  };
 
   return (
     <div className="min-h-screen p-8 bg-bg">
@@ -227,14 +260,21 @@ export default function StoryMiniGame() {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   {!quizCompleted && (
-                    <Button onClick={handleAnswerSubmit} disabled={!selectedAnswer}>
-                      {currentQuestionIndex < QUIZ_CONFIG.questions.length - 1 ? "Next Question" : "Finish Quiz"}
-                    </Button>
+                    <>
+                      <Button onClick={handleAnswerSubmit} disabled={!selectedAnswer}>
+                        {currentQuestionIndex < quiz.questions.length - 1 ? "Next Question" : "Finish Quiz"}
+                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Progress 
+                          value={((currentQuestionIndex + 1) / quiz.questions.length) * 100}
+                          className="w-[100px]"
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          {currentQuestionIndex + 1} / {quiz.questions.length}
+                        </span>
+                      </div>
+                    </>
                   )}
-                  <div className="text-sm text-muted-foreground">
-                    {/* <Progress  */}
-                    Progress: {((currentQuestionIndex + 1) / QUIZ_CONFIG.questions.length) * 100}%
-                  </div>
                 </CardFooter>
               </Card>
             </TabsContent>
@@ -249,16 +289,29 @@ export default function StoryMiniGame() {
                   <div className="space-y-4">
                     {poll.options.map((option) => (
                       <div key={option.id} className="flex items-center justify-between">
-                        <Button onClick={() => handlePollVote(option.id as PollOption)} variant="reverse" className="w-full mr-4">
+                        <Button 
+                          onClick={() => handlePollVote(option.id as PollOption)} 
+                          variant={selectedPollOption === option.id ? "default" : "reverse"}
+                          className="w-full mr-4"
+                        >
                           {option.label}
+                          {selectedPollOption === option.id && " ✓"}
                         </Button>
-                        <Progress
-                          value={(pollVotes[option.id as PollOption] / Object.values(pollVotes).reduce((a, b) => a + b, 0)) * 100}
-                          className="w-1/3"
-                        />
+                        <div className="w-1/3 flex items-center gap-2">
+                          <Progress
+                            value={calculatePollPercentage(pollVotes[option.id as PollOption])}
+                            className="flex-1"
+                          />
+                          <span className="text-sm w-12">
+                            {Math.round(calculatePollPercentage(pollVotes[option.id as PollOption]))}%
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
+                  <p className="text-sm mt-4 text-right">
+                    Total votes: {getTotalVotes()}
+                  </p>
                 </CardContent>
               </Card>
             </TabsContent>

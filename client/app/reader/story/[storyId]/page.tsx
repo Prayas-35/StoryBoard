@@ -40,6 +40,7 @@ export default function StoryDetails() {
             const response = await fetch(`/api/getStory/${storyId}`)
             console.log(response)
             const data = await response.json()
+            console.log("Data: ", data)
             setStory(data)
         }
         fetchStory()
@@ -61,7 +62,7 @@ export default function StoryDetails() {
                     <div className="flex items-center justify-center gap-4 text-sm">
                         <span className="flex items-center gap-1">
                             <Book className="w-4 h-4" />
-                            {story.numChaps?.toLocaleString()} words
+                            {story.numChaps?.toLocaleString()} chapters
                         </span>
                         <span className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
@@ -155,13 +156,13 @@ export default function StoryDetails() {
 
                 {/* Read Story Button */}
                 <div className="text-center mt-8">
-                    <Link href={`/read/${storyId}`}>
+                    <Link href={`/reader/story/read/${storyId}`}>
                         <Button size="lg">
                             <Book className="w-5 h-5 mr-2" />
                             Read Story
                         </Button>
                     </Link>
-                    <Link href={`/story/games/${storyId}`} className="ms-4">
+                    <Link href={`/reader/story/games/${storyId}`} className="ms-4">
                         <Button size="lg">
                             <Gamepad2 className="w-5 h-5 mr-2" />
                             Play Games

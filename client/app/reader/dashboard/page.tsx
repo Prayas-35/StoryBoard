@@ -58,7 +58,7 @@ export default function Dashboard() {
                             <ScrollArea className="w-full">
                                 <div className="flex w-max space-x-4 p-4">
                                     {trendingStories.map((story) => (
-                                        <Link href={`/story/${story.id}`} key={story.id}>
+                                        <Link href={`/reader/story/${story.id}`} key={story.id}>
                                             <Card className="w-[250px] shrink-0 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                                 <CardHeader>
                                                 <CardTitle className="overflow-x-hidden text-ellipsis whitespace-nowrap min-h-8">{story.title}

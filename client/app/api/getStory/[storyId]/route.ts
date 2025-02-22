@@ -30,6 +30,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         const status = await StoryStatus.findOne({ story: storyId })
         const chapters = await Chapter.find({ story: storyId })
         let lastEdited = await Chapter.findOne({ story: storyId }).sort({ createdAt: -1 })
+        console.log("Last Edited: ", lastEdited)
         if (!lastEdited) {
             lastEdited = {
                 createdAt: story.createdAt
@@ -53,6 +54,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             lastEdited: lastEdited.createdAt,
             status: status.status
         }
+        console.log("Response: ", response)
         return NextResponse.json(response, { status: 200 })
     } catch (error) {
         console.log("Error fetching story:", error)
