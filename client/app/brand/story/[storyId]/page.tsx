@@ -248,7 +248,7 @@ export default function BrandDealPage() {
                                             </div>
                                         </div>
                                         <p className="text-sm text-muted-foreground mt-4 mb-4">
-                                            Note: Brand integration should feel organic and relevant to the story's themes and setting.
+                                            Note: Brand integration should feel organic and relevant to the story&apos;s themes and setting.
                                         </p>
                                         <Button type="submit" className="w-full">
                                             <Send className="w-4 h-4 mr-2" />

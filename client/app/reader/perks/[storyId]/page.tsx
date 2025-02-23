@@ -418,7 +418,7 @@ export default function PerkPurchasePage() {
                             <AccordionItem value="item-2">
                                 <AccordionTrigger>Creativity Guidelines</AccordionTrigger>
                                 <AccordionContent>
-                                    Be creative with your perks, but please respect the story's tone and genre. The author reserves the
+                                    Be creative with your perks, but please respect the story&apos;s tone and genre. The author reserves the
                                     right to adjust submissions as needed.
                                 </AccordionContent>
                             </AccordionItem>
@@ -438,7 +438,7 @@ export default function PerkPurchasePage() {
                             <AccordionItem value="item-2">
                                 <AccordionTrigger>Can I get a refund?</AccordionTrigger>
                                 <AccordionContent>
-                                    Refunds are available within 24 hours of purchase if the perk hasn't been implemented yet. Contact
+                                    Refunds are available within 24 hours of purchase if the perk hasn&apos;t been implemented yet. Contact
                                     support for assistance.
                                 </AccordionContent>
                             </AccordionItem>
@@ -450,7 +450,7 @@ export default function PerkPurchasePage() {
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-4">
-                                <AccordionTrigger>What's the difference between Native and Story Tokens?</AccordionTrigger>
+                                <AccordionTrigger>What&apos;s the difference between Native and Story Tokens?</AccordionTrigger>
                                 <AccordionContent>
                                     Native Tokens can be used across all stories on the platform, while Story Tokens are specific to this
                                     story. Story Tokens may offer better rates but are limited to this narrative.
