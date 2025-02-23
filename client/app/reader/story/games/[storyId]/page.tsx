@@ -122,6 +122,7 @@ export default function StoryMiniGame() {
   const [selectedAnswer, setSelectedAnswer] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const { writeContractAsync } = useWriteContract()
+  const [dateString, setDateString] = useState("2022-12-31")
 
   // Replace the Set with a single string to track the selected option
   const [selectedPollOption, setSelectedPollOption] = useState<string | null>(null)
@@ -139,8 +140,20 @@ export default function StoryMiniGame() {
     }
   }
 
+  const fetchCreatedAt = async () => {
+    try {
+      const response = await fetch(`/api/getCreatedAt?storyId=${storyId}`)
+      const data = await response.json()
+      setDateString(data.createdAt)
+      console.log("Data: ", data)
+    } catch (error) {
+      console.error("Error fetching created at date: ", error)
+    }
+  }
+
   useEffect(() => {
     fetchGames()
+    fetchCreatedAt()
   }, [storyId])
 
   const handleAnswerSubmit = async () => {
@@ -176,7 +189,7 @@ export default function StoryMiniGame() {
             abi: pointTokenAbi,
             address: pointTokenAddress,
             functionName: "getQuizPts",
-            args: [BigInt(storyId as string)],
+            args: [Math.floor(new Date(dateString).getTime() / 1000)],
           });
           console.log("Transaction successful", tx);
         } catch (error) {

@@ -6,7 +6,7 @@ async function main() {
     console.log("Deploying contracts with the account:", deployer.address);
 
     // Get the ContractFactory for the contract
-    const PRESALE_DURATION = 7 * 24 * 60 * 60; // 7 days in seconds
+    const PRESALE_DURATION = 60; // 7 days in seconds
 
     // Deploy the contract
     const StoryToken = await ethers.getContractFactory("StoryToken");

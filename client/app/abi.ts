@@ -767,7 +767,13 @@ export const pointTokenAbi = [
       }
     ],
     "name": "createStoryToken",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -974,4 +980,4 @@ export const pointTokenAbi = [
 ];
 
 export const contractAddress = "0xCB3afF879C019b0916998FE671FEEEF4aeA49E9C";
-export const pointTokenAddress = "0x4cB490beb0da5538A569526D689710b1C3A74c3C";
+export const pointTokenAddress = "0x943e875aE202A0b7F38D12ded07EA953FAA8b83c";

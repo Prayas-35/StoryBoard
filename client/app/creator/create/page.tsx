@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { use, useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -13,7 +13,7 @@ import { CharacterForm } from "@/components/CharacterForm"
 import type { Character } from "@/components/CharacterForm"
 import { usePrivy } from "@privy-io/react-auth"
 import { useWriteContract } from 'wagmi'
-import { pointTokenAbi, pointTokenAddress } from "../../abi"
+import { pointTokenAbi, pointTokenAddress, abi, contractAddress } from "../../abi"
 
 export default function CreateStoryAgent() {
     const { user } = usePrivy()
@@ -51,6 +51,7 @@ export default function CreateStoryAgent() {
             publicKey: ""
         }
     })
+    const [dateString, setDateString] = useState("")
 
     const { writeContractAsync, data: storyTokenAddress } = useWriteContract()
 
@@ -64,8 +65,40 @@ export default function CreateStoryAgent() {
         setStory((prev) => ({ ...prev, [name]: value }))
     }
 
+    const fetchCreatedAt = async (storyId: string) => {
+        try {
+            const response = await fetch(`/api/getCreatedAt?storyId=${storyId}`)
+            const data = await response.json()
+            setDateString(data.createdAt)
+            console.log("Data: ", data)
+        } catch (error) {
+            console.error("Error fetching created at date: ", error)
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        // const tx0 = await writeContractAsync({
+        //     abi: abi,
+        //     address: contractAddress,
+        //     functionName: "createStory",
+        //     args: [story.title, story.genre, story.tone, story.targetAudience, story.premise, story.setting, story.timePeriod, story.characters, story.themes, story.user.publicKey]
+        // },
+        //   {
+        //     onSuccess(data) {
+        //       console.log("Transaction successful!", data);
+        //     },
+        //     onSettled(data, error) {
+        //       if (error) {
+        //         console.error("Error on settlement:", error);
+        //       } else {
+        //         console.log("Transaction settled:", data);
+        //       }
+        //     },
+        //     onError(error) {
+        //       console.error("Transaction error:", error);
+        //     },
+        //     });
         const payload = {
             ...storySettings,
             interval: Number(storySettings.interval),
@@ -86,27 +119,29 @@ export default function CreateStoryAgent() {
         console.log(data)
         console.log("tokenId", data.storyId)
         console.log("story id", parseInt(data.storyId, 10))
+        fetchCreatedAt(data.storyId)
+        console.log("Date string", dateString)
 
         const tx = await writeContractAsync({
             abi: pointTokenAbi,
             address: pointTokenAddress,
             functionName: "createStoryToken",
-            args: [BigInt(data.storyId), "Talk", "$TLK"],
+            args: [Math.floor(new Date(dateString).getTime() / 1000), "Talk", "$TLK"],
         },
-          {
-            onSuccess(data) {
-              console.log("Transaction successful!", data);
-            },
-            onSettled(data, error) {
-              if (error) {
-                console.error("Error on settlement:", error);
-              } else {
-                console.log("Transaction settled:", data);
-              }
-            },
-            onError(error) {
-              console.error("Transaction error:", error);
-            },
+            {
+                onSuccess(data) {
+                    console.log("Transaction successful!", data);
+                },
+                onSettled(data, error) {
+                    if (error) {
+                        console.error("Error on settlement:", error);
+                    } else {
+                        console.log("Transaction settled:", data);
+                    }
+                },
+                onError(error) {
+                    console.error("Transaction error:", error);
+                },
             });
         console.log("Transaction", tx);
         console.log("Token address", storyTokenAddress);
