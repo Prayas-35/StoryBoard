@@ -120,11 +120,11 @@ contract StoryToken is ERC20, Ownable {
      * @dev Allows users to sell tokens after the presale period at the bonding curve price.
      * @param tokenAmount The number of tokens to sell.
      */
-    function sellTokens(uint256 tokenAmount) external {
+    function sellTokens(uint256 tokenAmount, address to) external {
         if (balanceOf(msg.sender) < tokenAmount)
             revert StoryToken__InsufficientBalance();
 
-        _update(msg.sender, address(this), tokenAmount);
+        _update(msg.sender, to, tokenAmount);
 
         emit TokensSold(msg.sender, tokenAmount, tokenAmount);
     }
