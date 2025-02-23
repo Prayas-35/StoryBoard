@@ -527,6 +527,11 @@ export const abi = [
         "internalType": "uint256",
         "name": "tokenAmount",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
       }
     ],
     "name": "sellTokens",
@@ -979,5 +984,5 @@ export const pointTokenAbi = [
   }
 ];
 
-export const contractAddress = "0xCB3afF879C019b0916998FE671FEEEF4aeA49E9C";
+export const contractAddress = "0x6B3c6278fE6DE550F2be9e69C71D0B15F019156D";
 export const pointTokenAddress = "0x943e875aE202A0b7F38D12ded07EA953FAA8b83c";
