@@ -24,7 +24,7 @@ import NavBar from "@/components/functions/NavBar"
 import { abi, contractAddress, pointTokenAbi, pointTokenAddress } from "@/app/abi";
 import { useReadContract, useWriteContract } from "wagmi"
 import { usePrivy } from "@privy-io/react-auth"
-import { formatEther } from "viem";
+import { formatEther, parseEther } from "viem";
 import { useParams } from "next/navigation"
 
 export default function PerkPurchasePage() {
@@ -185,7 +185,7 @@ export default function PerkPurchasePage() {
                 abi: abi,
                 address: contractAddress,
                 functionName: 'sellTokens',
-                args: [userAddress, storyDetails.publicKey, cost],
+                args: [parseEther(cost.toString()), storyDetails.publicKey],
             },
                 {
                     onError: (error) => {
@@ -194,7 +194,7 @@ export default function PerkPurchasePage() {
                             description: error.message,
                             variant: "destructive",
                         })
-                        setUserBalance(userBalance + cost)
+                        setUserBalance(userBalance - cost)
                     },
                     onSuccess: () => {
                         toast({
@@ -254,10 +254,6 @@ export default function PerkPurchasePage() {
                         {storyDetails.premise}
                     </p>
                     <div className="flex justify-center space-x-4">
-                        <div className="flex items-center">
-                            <Coins className="w-6 h-6 mr-2 text-yellow-400" />
-                            <span>{tokenBalance ? Number(formatEther(BigInt(tokenBalance))).toFixed(3) : 0} $STORY</span>
-                        </div>
                         <div className="flex items-center">
                             <Sparkles className="w-6 h-6 mr-2 text-pink-400" />
                             <span>{intStoryTokens ? Number(formatEther(BigInt(intStoryTokens))).toFixed(3) : 0} $INT</span>

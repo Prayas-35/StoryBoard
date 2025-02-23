@@ -51,7 +51,7 @@ export default function LandingPage() {
                 <br />
                 Through{" "}
                 <span className="bg-gradient-to-r dark:from-white from-black dark:to-purple-600 to-purple-600 bg-clip-text text-transparent">
-                  Web3 Innovation
+                  AI Innovation
                 </span>
               </h1>
               <p className="mb-8 text-xl text-muted-foreground">

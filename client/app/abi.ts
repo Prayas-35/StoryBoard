@@ -984,5 +984,5 @@ export const pointTokenAbi = [
   }
 ];
 
-export const contractAddress = "0x6B3c6278fE6DE550F2be9e69C71D0B15F019156D";
+export const contractAddress = "0xf52ddC3c0b03543AE68E638aB7E0E6AC13f77d67";
 export const pointTokenAddress = "0x943e875aE202A0b7F38D12ded07EA953FAA8b83c";
