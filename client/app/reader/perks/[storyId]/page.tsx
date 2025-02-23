@@ -22,7 +22,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Clock, Coins, Sparkles } from "lucide-react"
 import NavBar from "@/components/functions/NavBar"
 import { abi, contractAddress, pointTokenAbi, pointTokenAddress } from "@/app/abi";
-import { useReadContract } from "wagmi"
+import { useReadContract, useWriteContract } from "wagmi"
 import { usePrivy } from "@privy-io/react-auth"
 import { formatEther } from "viem";
 import { useParams } from "next/navigation"
@@ -42,6 +42,8 @@ export default function PerkPurchasePage() {
     const [error, setError] = useState<string | null>(null);
     const { user } = usePrivy();
     const userAddress = user?.wallet?.address;
+
+    const { writeContractAsync } = useWriteContract();
 
     const result = useReadContract({
         abi: abi,
@@ -175,8 +177,36 @@ export default function PerkPurchasePage() {
         const setUserBalance = purchaseType === "native" ? setUserNativeTokens : setUserStoryTokens
         const tokenName = purchaseType === "native" ? "Native Tokens" : "Story Tokens"
 
-        if (tokenBalance ? Number(formatEther(BigInt(tokenBalance))).toFixed(3): 0 >= cost) {
+        const availableBalance = tokenBalance ? Number(formatEther(BigInt(tokenBalance))) : 0;
+
+        if (availableBalance >= cost) {
             setUserBalance(userBalance - cost)
+            const tx = writeContractAsync({
+                abi: abi,
+                address: contractAddress,
+                functionName: '_update',
+                args: [userAddress, cost],
+            },
+            {
+                onError: (error) => {
+                    toast({
+                        title: "Transaction Failed",
+                        description: error.message,
+                        variant: "destructive",
+                    })
+                    setUserBalance(userBalance + cost)
+                },
+                onSuccess: () => {
+                    toast({
+                        title: "Perk Purchased!",
+                        description: `You've successfully purchased the ${perk.name} perk for ${cost} ${tokenName}.`,
+                    })
+                },
+                onSettled: () => {
+                    console.log("Transaction settled");
+                }
+            }
+        )
             toast({
                 title: "Perk Purchased!",
                 description: `You've successfully purchased the ${perk.name} perk for ${cost} ${tokenName}.`,
@@ -237,10 +267,10 @@ export default function PerkPurchasePage() {
 
                 <main>
                     <Tabs defaultValue="available-perks" className="mb-8">
-                        <TabsList >
-                            <TabsTrigger value="available-perks">Available Perks</TabsTrigger>
-                            <TabsTrigger value="my-perks">My Active Perks</TabsTrigger>
-                            <TabsTrigger value="featured-perks">Featured Perks</TabsTrigger>
+                        <TabsList className="w-full">
+                            <TabsTrigger value="available-perks" className="w-1/3">Available Perks</TabsTrigger>
+                            <TabsTrigger value="my-perks" className="w-1/3">My Active Perks</TabsTrigger>
+                            <TabsTrigger value="featured-perks" className="w-1/3">Featured Perks</TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="available-perks" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
