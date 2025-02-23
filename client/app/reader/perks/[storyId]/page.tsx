@@ -184,29 +184,29 @@ export default function PerkPurchasePage() {
             const tx = writeContractAsync({
                 abi: abi,
                 address: contractAddress,
-                functionName: '_update',
-                args: [userAddress, cost],
+                functionName: 'sellTokens',
+                args: [userAddress, storyDetails.publicKey, cost],
             },
-            {
-                onError: (error) => {
-                    toast({
-                        title: "Transaction Failed",
-                        description: error.message,
-                        variant: "destructive",
-                    })
-                    setUserBalance(userBalance + cost)
-                },
-                onSuccess: () => {
-                    toast({
-                        title: "Perk Purchased!",
-                        description: `You've successfully purchased the ${perk.name} perk for ${cost} ${tokenName}.`,
-                    })
-                },
-                onSettled: () => {
-                    console.log("Transaction settled");
+                {
+                    onError: (error) => {
+                        toast({
+                            title: "Transaction Failed",
+                            description: error.message,
+                            variant: "destructive",
+                        })
+                        setUserBalance(userBalance + cost)
+                    },
+                    onSuccess: () => {
+                        toast({
+                            title: "Perk Purchased!",
+                            description: `You've successfully purchased the ${perk.name} perk for ${cost} ${tokenName}.`,
+                        })
+                    },
+                    onSettled: () => {
+                        console.log("Transaction settled");
+                    }
                 }
-            }
-        )
+            )
             toast({
                 title: "Perk Purchased!",
                 description: `You've successfully purchased the ${perk.name} perk for ${cost} ${tokenName}.`,
@@ -246,7 +246,7 @@ export default function PerkPurchasePage() {
                     <h1 className="text-4xl font-bold mb-2">{storyDetails.title}</h1>
                     <div className="flex flex-col items-center space-y-2 mb-4">
                         <div>
-                            <p className="text-xl">by Magical Wordsmith</p>
+                            <p className="text-xl">by {storyDetails.alias}</p>
                             <p className="text-sm opacity-75">Genre: {storyDetails.genre}</p>
                         </div>
                     </div>

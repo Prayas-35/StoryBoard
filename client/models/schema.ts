@@ -214,7 +214,7 @@ const BrandSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'approved', 'rejected'],
+        enum: ['pending', 'approved', 'rejected', 'completed'],
         default: 'pending',
         required: true
     }
@@ -224,11 +224,47 @@ const BrandSchema = new mongoose.Schema({
     }
 );
 
+
+const QuestionSchema = new mongoose.Schema({
+    question: {
+        type: String,
+        required: true
+    },
+    options: {
+        type: [String],
+        required: true
+    },
+    correctAnswer: {
+        type: String,
+        required: true
+    }
+});
+
+const QuizSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    questions: {
+        type: [QuestionSchema],
+        required: true
+    },
+    chapter: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Chapter',
+        required: true
+    }
+});
+
 const Story = mongoose.models.Story || mongoose.model('Story', StorySchema);
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Chapter = mongoose.models.Chapter || mongoose.model('Chapter', ChapterSchema);
 const StorySettings = mongoose.models.StorySettings || mongoose.model('StorySettings', StorySettingsSchema);
-const StoryStatus = mongoose.models.StoryStatus || mongoose.model('StoryStatus', StoryStatusSchema);    
+const StoryStatus = mongoose.models.StoryStatus || mongoose.model('StoryStatus', StoryStatusSchema);
 const EndgameProtocol = mongoose.models.EndgameProtocol || mongoose.model('EndgameProtocol', EndgameProtocolSchema);
-const Brand = mongoose.models.Brand || mongoose.model('Brand', BrandSchema);    
+const Brand = mongoose.models.Brand || mongoose.model('Brand', BrandSchema);
 export { Story, User, Chapter, StorySettings, StoryStatus, EndgameProtocol, Brand };

@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import NavBar from "@/components/functions/NavBar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 
 interface Story {
@@ -152,6 +153,7 @@ export default function MyStoryDashboard() {
     const [aiEnabled, setAiEnabled] = useState(false)
     const [brandDeals, setBrandDeals] = useState<BrandDeal[]>([])
     const { storyId } = useParams();
+    const router = useRouter();
     useEffect(() => {
         fetch(`/api/stories/details?storyId=${storyId}`)
             .then(res => res.json())
@@ -374,8 +376,10 @@ export default function MyStoryDashboard() {
                                         </h3>
                                         <p className="text-sm text-gray-200">{chapter.recap}</p>
                                     </div>
-                                    <Button variant="reverse">
-                                        <Edit3 className="mr-2 h-4 w-4" /> Edit
+                                    <Button variant="reverse" onClick={() => {
+                                        router.push(`/reader/story/read/${storyId}`)
+                                    }}>
+                                        <Edit3 className="mr-2 h-4 w-4" /> Read
                                     </Button>
                                 </div>
                             ))}
@@ -518,6 +522,7 @@ export default function MyStoryDashboard() {
                                                 <SelectItem value="pending">Pending</SelectItem>
                                                 <SelectItem value="approved">Approved</SelectItem>
                                                 <SelectItem value="rejected">Rejected</SelectItem>
+                                                <SelectItem value="completed">Completed</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>

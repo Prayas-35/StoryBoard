@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import connectToDatabase from "@/lib/mongo"
-import { Chapter, Story, StoryStatus } from "@/models/schema"
+import { Chapter, Story, StoryStatus, User } from "@/models/schema"
 
 interface Response {
     title: string
@@ -28,6 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         await connectToDatabase()
         const story = await Story.findOne({ _id: storyId })
         const status = await StoryStatus.findOne({ story: storyId })
+        const user = await User.findOne({ _id: story.user })
         const chapters = await Chapter.find({ story: storyId })
         let lastEdited = await Chapter.findOne({ story: storyId }).sort({ createdAt: -1 })
         console.log("Last Edited: ", lastEdited)
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             status: status.status
         }
         console.log("Response: ", response)
-        return NextResponse.json(response, { status: 200 })
+        return NextResponse.json({ ...response, publicKey: user.publicKey, alias: user.alias }, { status: 200 })
     } catch (error) {
         console.log("Error fetching story:", error)
         return NextResponse.json({ error: "Failed to fetch story" }, { status: 500 })

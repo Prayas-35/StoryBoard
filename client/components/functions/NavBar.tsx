@@ -53,12 +53,20 @@ export default function NavBar() {
                 </Link>
                 <nav className="hidden md:flex gap-6 items-center">
                     {role === "Creator" && (
-                        <Link
-                            href="/creator/dashboard"
-                            className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
-                        >
-                            Creators
-                        </Link>
+                        <>
+                            <Link
+                                href="/creator/dashboard"
+                                className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
+                            >
+                                Creators
+                            </Link>
+                            <Link
+                                href="/creator/create"
+                                className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
+                            >
+                                Create Story
+                            </Link>
+                        </>
                     )}
                     {role === "Reader" && (
                         <Link
@@ -69,7 +77,7 @@ export default function NavBar() {
                         </Link>
                     )}
                     <Link
-                        href="/reader/dashboard"
+                        href="/token"
                         className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
                     >
                         $STORY Tokens
