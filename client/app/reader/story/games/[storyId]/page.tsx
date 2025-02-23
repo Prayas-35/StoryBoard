@@ -267,7 +267,7 @@ export default function StoryMiniGame() {
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full bg-violet-600">
+            <TabsList className="w-full bg-[#d385af]">
               {GAME_CONFIG.tabs.map(tab => (
                 <TabsTrigger key={tab.id} value={tab.id} className="w-full">
                   <tab.icon className="w-5 h-5 mr-2" />
@@ -276,7 +276,7 @@ export default function StoryMiniGame() {
               ))}
             </TabsList>
             <TabsContent value="quiz">
-              <Card className="bg-violet-600">
+              <Card className="bg-[#d385af]">
                 <CardHeader>
                   <CardTitle>{quiz.title}</CardTitle>
                   <CardDescription>{quiz.description}</CardDescription>
@@ -340,7 +340,7 @@ export default function StoryMiniGame() {
               </Card>
             </TabsContent>
             <TabsContent value="polls">
-              <Card className="bg-violet-600">
+              <Card className="bg-[#d385af]">
                 <CardHeader>
                   <CardTitle>{poll.title}</CardTitle>
                   <CardDescription>{poll.description}</CardDescription>
@@ -394,7 +394,7 @@ export default function StoryMiniGame() {
               </Card>
             </TabsContent>
             <TabsContent value="predictions">
-              <Card className="bg-violet-600">
+              <Card className="bg-[#d385af]">
                 <CardHeader>
                   <CardTitle>{predictions.title}</CardTitle>
                   <CardDescription>{predictions.description}</CardDescription>

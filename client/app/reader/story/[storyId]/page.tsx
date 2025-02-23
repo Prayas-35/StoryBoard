@@ -69,7 +69,7 @@ export default function StoryDetails() {
                             Last edited {story.lastEdited}
                         </span>
                     </div>
-                    <Badge variant="default" className="bg-purple-800 text-white hover:bg-purple-700">
+                    <Badge variant="default" className="bg-[#d385af] text-black hover:bg-[#d385af]">
                         {story.status}
                     </Badge>
                 </div>
@@ -80,7 +80,7 @@ export default function StoryDetails() {
                         <div className="grid gap-8 md:grid-cols-2">
                             {/* Left Column */}
                             <div className="space-y-6">
-                                <Card className="bg-violet-600 backdrop-blur-sm shadow-none">
+                                <Card className="bg-[#d385af] backdrop-blur-sm shadow-none">
                                     <CardHeader>
                                         <CardTitle className="flex items-center"><Info className="w-5 h-5 mr-2" />About</CardTitle>
                                     </CardHeader>
@@ -128,7 +128,7 @@ export default function StoryDetails() {
 
                                 <ScrollArea className="h-[400px] pr-4">
                                     <div className="space-y-4">
-                                        <Card className="bg-violet-600 backdrop-blur-sm shadow-none">
+                                        <Card className="bg-[#d385af] backdrop-blur-sm shadow-none">
                                             <CardHeader>
                                                 <CardTitle className="flex items-center"><UsersRound className="w-5 h-5 mr-2" />Characters</CardTitle>
                                             </CardHeader>

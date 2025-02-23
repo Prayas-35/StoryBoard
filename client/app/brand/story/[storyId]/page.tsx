@@ -203,7 +203,7 @@ export default function BrandDealPage() {
 
                         {/* Right Sidebar - Brand Deal Proposal Form */}
                         <div className="lg:w-1/3">
-                            <Card className="sticky top-8 mb-8">
+                            <Card className="sticky top-[5rem] mb-8">
                                 <CardHeader>
                                     <CardTitle>Propose a Brand Deal</CardTitle>
                                 </CardHeader>
@@ -267,7 +267,7 @@ export default function BrandDealPage() {
                         </CardHeader>
                         <CardContent>
                             <p>For brand partnership inquiries or support with submitting deals, please contact:</p>
-                            <p className="font-medium">partnerships@cosmiccafe.com</p>
+                            <p className="font-medium">partnerships@storyboard.com</p>
                         </CardContent>
                     </Card>
                 </main>
