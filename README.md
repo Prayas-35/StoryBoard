@@ -1,4 +1,4 @@
-# **StoryBoard: A AI-Powered Interactive Storytelling Platform**
+# **StoryBoard: An AI-Powered Interactive Storytelling Platform**
 
 ## **Tagline:** *Where Stories Evolve, Readers Decide, and Creators Thrive.*
 
