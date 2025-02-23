@@ -143,42 +143,45 @@ export default function StoryMiniGame() {
     fetchGames()
   }, [storyId])
 
-  const handleAnswerSubmit = () => {
+  const handleAnswerSubmit = async () => {
     const currentQuestion = quiz.questions[currentQuestionIndex];
-    // Check and update score before handling question transitions
+    
+    // Update score for current question
     if (selectedAnswer === currentQuestion.correctAnswer) {
+      // Use callback form to ensure we're working with latest state
       setQuizScore(prevScore => prevScore + 1);
     }
 
     if (currentQuestionIndex < quiz.questions.length - 1) {
+      // Move to next question
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
       setSelectedAnswer("");
     } else {
+      // Quiz is complete
       setQuizCompleted(true);
       setUserStats(prev => ({ ...prev, quizzes: prev.quizzes + 1 }));
-      // Check the final score including the last question
+      
+      // Check if all questions were answered correctly
+      // Use the updated score directly rather than calculating again
       const finalScore = selectedAnswer === currentQuestion.correctAnswer ? 
         quizScore + 1 : quizScore;
-      
-      // Show achievement if all questions are correct
+        console.log("Final Score: ", finalScore)
+        console.log("Quiz Score: ", quizScore)
       if (finalScore === quiz.questions.length) {
         setShowAchievement(true);
         setTimeout(() => setShowAchievement(false), ACHIEVEMENT_CONFIG.displayDuration);
-        const tx = writeContractAsync(
-          {
+        
+        try {
+          const tx = await writeContractAsync({
             abi: pointTokenAbi,
             address: pointTokenAddress,
             functionName: "getQuizPts",
-          },
-          {
-            onSuccess: () => {
-              console.log("Transaction successful", tx);
-            },
-            onError: () => {
-              console.log("Transaction failed");
-            },
-          }
-        );
+            args: [BigInt(storyId as string)],
+          });
+          console.log("Transaction successful", tx);
+        } catch (error) {
+          console.log("Transaction failed", error);
+        }
       }
     }
   };
