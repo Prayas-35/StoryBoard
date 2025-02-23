@@ -52,42 +52,48 @@ export default function NavBar() {
                     </div>
                 </Link>
                 <nav className="hidden md:flex gap-6 items-center">
-                    {role === "Creator" && (
-                        <>
-                            <Link
-                                href="/creator/dashboard"
-                                className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
-                            >
-                                Creators
-                            </Link>
-                            <Link
-                                href="/creator/create"
-                                className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
-                            >
-                                Create Story
-                            </Link>
-                        </>
-                    )}
-                    {role === "Reader" && (
+                    {/* {role === "Creator" && ( */}
+                    <>
                         <Link
-                            href="/reader/dashboard"
+                            href="/creator/dashboard"
                             className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
                         >
-                            Readers
+                            Creators
                         </Link>
-                    )}
+                        <Link
+                            href="/creator/create"
+                            className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
+                        >
+                            Create Story
+                        </Link>
+                    </>
+
+                    {/* {role === "Reader" && ( */}
+                    <Link
+                        href="/reader/dashboard"
+                        className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
+                    >
+                        Readers
+                    </Link>
+                    <Link
+                        href="/brand/dashboard"
+                        className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
+                    >
+                        Brands
+                    </Link>
+
                     <Link
                         href="/token"
                         className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
                     >
                         $STORY Tokens
                     </Link>
-                    <Link
+                    {/* <Link
                         href="/setup"
                         className="text-lg font-bold hover:text-primary transition duration-300 ease-in-out transform hover:scale-110"
                     >
                         Set Up
-                    </Link>
+                    </Link> */}
                 </nav>
                 <div className="flex items-center gap-3">
                     <ModeToggle />
