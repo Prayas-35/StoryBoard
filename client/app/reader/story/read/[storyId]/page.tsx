@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Progress } from "@/components/ui/progress"
 import { useParams } from "next/navigation"
+import { ModeToggle } from "@/components/theme/themeSwitcher"
 
 interface Story {
     title: string
@@ -58,7 +59,10 @@ export default function StoryReader() {
                             {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                         </Button>
                     </div>
-                    <div className="flex items-center gap-2 text-sm ">
+                    <div className="flex items-center gap-2 text-sm">
+                        <div className="flex items-center text-sm me-6">
+                            <ModeToggle />
+                        </div>
                         <BookOpen className="w-4 h-4" />
                         Chapter {currentChapter + 1} of {story?.chapters.length ?? 0}
                     </div>
