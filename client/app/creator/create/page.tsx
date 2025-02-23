@@ -87,12 +87,28 @@ export default function CreateStoryAgent() {
         console.log("tokenId", data.storyId)
         console.log("story id", parseInt(data.storyId, 10))
 
-        await writeContractAsync({
+        const tx = await writeContractAsync({
             abi: pointTokenAbi,
             address: pointTokenAddress,
             functionName: "createStoryToken",
             args: [BigInt(data.storyId), "Talk", "$TLK"],
-        })
+        },
+          {
+            onSuccess(data) {
+              console.log("Transaction successful!", data);
+            },
+            onSettled(data, error) {
+              if (error) {
+                console.error("Error on settlement:", error);
+              } else {
+                console.log("Transaction settled:", data);
+              }
+            },
+            onError(error) {
+              console.error("Transaction error:", error);
+            },
+            });
+        console.log("Transaction", tx);
         console.log("Token address", storyTokenAddress);
         // TODO: Redirect to story page
     }

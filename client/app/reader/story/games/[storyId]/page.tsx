@@ -15,7 +15,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Book, Trophy, PieChart, Zap, ArrowLeft } from "lucide-react"
 import { useParams } from "next/navigation"
 import NavBar from "@/components/functions/NavBar"
-import { useRouter } from "next/navigation" 
+import { useRouter } from "next/navigation"
+import { useWriteContract } from "wagmi"
+import { pointTokenAbi, pointTokenAddress } from "@/app/abi"
 
 type PollOption = 'option1' | 'option2' | 'option3' | 'option4';
 type PollVotes = Record<PollOption, number>;
@@ -119,6 +121,7 @@ export default function StoryMiniGame() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState("")
   const [isLoading, setIsLoading] = useState(true)
+  const { writeContractAsync } = useWriteContract()
 
   // Replace the Set with a single string to track the selected option
   const [selectedPollOption, setSelectedPollOption] = useState<string | null>(null)
@@ -161,6 +164,21 @@ export default function StoryMiniGame() {
       if (finalScore === quiz.questions.length) {
         setShowAchievement(true);
         setTimeout(() => setShowAchievement(false), ACHIEVEMENT_CONFIG.displayDuration);
+        const tx = writeContractAsync(
+          {
+            abi: pointTokenAbi,
+            address: pointTokenAddress,
+            functionName: "getQuizPts",
+          },
+          {
+            onSuccess: () => {
+              console.log("Transaction successful", tx);
+            },
+            onError: () => {
+              console.log("Transaction failed");
+            },
+          }
+        );
       }
     }
   };
