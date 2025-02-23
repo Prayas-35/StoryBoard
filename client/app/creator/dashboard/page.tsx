@@ -102,12 +102,12 @@ function StoryCard({ story, isCurrentStory }: { story: any, isCurrentStory: bool
           <Tooltip>
             <TooltipTrigger asChild>
               <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 z-20">
-                <CardHeader className=" text-white">
+                <CardHeader className="">
                   <CardTitle className="flex items-center justify-between">
                     {story.title}
-                    <Bot className="h-5 w-5 text-yellow-300" />
+                    <Bot className="h-5 w-5 text-purple-700" />
                   </CardTitle>
-                  <CardDescription className="text-purple-100">
+                  <CardDescription className="text-black">
                     {story.readers} followers • Last edited {story.lastEdited}
                   </CardDescription>
                 </CardHeader>
@@ -115,7 +115,7 @@ function StoryCard({ story, isCurrentStory }: { story: any, isCurrentStory: bool
                   <Badge variant={story.status === "Published" ? "default" : "neutral"} className="mb-2">
                     {story.status}
                   </Badge>
-                  <p className="text-sm dark:text-gray-800 text-gray-600">
+                  <p className="text-sm dark:text-black text-black">
                     {isCurrentStory
                       ? story.premise
                       : "Reflect on your completed masterpiece and gather inspiration."}
@@ -155,7 +155,7 @@ function StoryCard({ story, isCurrentStory }: { story: any, isCurrentStory: bool
             <Badge variant={story.status === "Published" ? "default" : "neutral"} className="mb-2">
               {story.status}
             </Badge>
-            <p className="text-sm dark:text-gray-800 text-gray-600">
+            <p className="text-sm dark:text-black text-black">
               {isCurrentStory
                 ? "Continue your journey and bring this story to life!"
                 : "Reflect on your completed masterpiece and gather inspiration."}

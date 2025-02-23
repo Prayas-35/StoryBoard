@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 :root {
-  --main: #a388ee;
+  --main: #edcdf2;
   --overlay: rgba(0, 0, 0, 0.8);
   /* background color overlay for alert dialogs, modals, etc. */
 
@@ -34,7 +34,7 @@
 }
 
 .dark {
-  --main: #7a5fd9;
+  --main: #818380;
   --bg: #1e1a2e;
   --bw: #212121;
   --blank: #fff;

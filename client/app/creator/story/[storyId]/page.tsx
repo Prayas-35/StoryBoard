@@ -277,8 +277,8 @@ export default function MyStoryDashboard() {
                                         <SelectValue>{storyStatus}</SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="completed">Completed</SelectItem>
+                                        <SelectItem value="active" className="hover:bg-[#d385af]">Active</SelectItem>
+                                        <SelectItem value="completed" className="hover:bg-[#d385af]">Completed</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -298,7 +298,7 @@ export default function MyStoryDashboard() {
                     <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {storyData?.characters.map((character) => (
-                                <Card key={character.name} className="bg-violet-600">
+                                <Card key={character.name} className="bg-[#d385af] dark:bg-black">
                                     <CardHeader>
                                         <CardTitle>{character.name}</CardTitle>
                                         <CardDescription>{character.role}</CardDescription>
@@ -336,8 +336,8 @@ export default function MyStoryDashboard() {
                                         <SelectValue>{aiEnabled ? "AI" : "Manual"}</SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Manual">Manual</SelectItem>
-                                        <SelectItem value="AI">AI</SelectItem>
+                                        <SelectItem value="Manual" className="hover:bg-[#d385af]">Manual</SelectItem>
+                                        <SelectItem value="AI" className="hover:bg-[#d385af]">AI</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -374,7 +374,8 @@ export default function MyStoryDashboard() {
                                         <h3 className="font-bold">
                                             Chapter {chapter.number}: {chapter.title}
                                         </h3>
-                                        <p className="text-sm text-gray-200">{chapter.recap}</p>
+                                        <p className="text-sm text-gray-900
+                                        ">{chapter.recap}</p>
                                     </div>
                                     <Button variant="reverse" onClick={() => {
                                         router.push(`/reader/story/read/${storyId}`)
@@ -428,7 +429,7 @@ export default function MyStoryDashboard() {
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <Card className="bg-violet-600">
+                            <Card className="bg-[#d385af] dark:bg-grey">
                                 <CardHeader>
                                     <CardTitle>Reader Engagement</CardTitle>
                                 </CardHeader>
@@ -436,17 +437,17 @@ export default function MyStoryDashboard() {
                                     <ResponsiveContainer width="100%" height={200}>
                                         <LineChart data={engagementData}>
                                             <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="name" stroke="#222222" />
-                                            <YAxis stroke="#222222" />
+                                            <XAxis dataKey="name" stroke="#424028" />
+                                            <YAxis stroke="#424028" />
                                             <Tooltip contentStyle={{ backgroundColor: "#000000", color: "#ffffff" }} />
                                             <Legend />
-                                            <Line type="monotone" dataKey="views" stroke="#8884d8" />
-                                            <Line type="monotone" dataKey="comments" stroke="#82ca9d" />
+                                            <Line type="monotone" dataKey="views" stroke="#0000ff" />
+                                            <Line type="monotone" dataKey="comments" stroke="#ff0000" />
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
-                            <Card className="bg-violet-600">
+                            <Card className="bg-[#d385af]">
                                 <CardHeader>
                                     <CardTitle>Genre Distribution</CardTitle>
                                 </CardHeader>
@@ -460,7 +461,7 @@ export default function MyStoryDashboard() {
                                                 cx="50%"
                                                 cy="50%"
                                                 outerRadius={80}
-                                                fill="#8884d8"
+                                                fill="#424028"
                                                 label={({ index }) => genreData[index].name}
                                             />
                                             <Tooltip content={<CustomTooltip />} contentStyle={{ backgroundColor: "#000000", color: "#ffffff" }} />
@@ -468,14 +469,14 @@ export default function MyStoryDashboard() {
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
-                            <Card className="bg-violet-600">
+                            <Card className="bg-[#d385af]">
                                 <CardHeader>
                                     <CardTitle>Word Count per Chapter</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <ResponsiveContainer width="100%" height={200}>
                                         <BarChart data={wordCountData}>
-                                            <Bar dataKey="count" fill="#8884d8" />
+                                            <Bar dataKey="count" fill="#424028" />
                                             <Tooltip contentStyle={{ backgroundColor: "#000000", color: "#ffffff" }} />
                                             <YAxis stroke="#222222" />
                                             <XAxis dataKey="name" stroke="#222222" />
@@ -512,17 +513,17 @@ export default function MyStoryDashboard() {
                                 <div key={index} className="flex items-center justify-between">
                                     <div>
                                         <h3 className="font-bold">{deal.name}</h3>
-                                        <p className="text-sm text-gray-200">{deal.product}</p>
-                                        <p className="text-sm text-gray-200 mb-2">{deal.description}</p>
+                                        <p className="text-sm text-black">{deal.product}</p>
+                                        <p className="text-sm text-black mb-2">{deal.description}</p>
                                         <Select onValueChange={(value) => handleStatusChange(value, index)} defaultValue={deal.status}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="pending">Pending</SelectItem>
-                                                <SelectItem value="approved">Approved</SelectItem>
-                                                <SelectItem value="rejected">Rejected</SelectItem>
-                                                <SelectItem value="completed">Completed</SelectItem>
+                                                <SelectItem value="pending" className="hover:bg-[#d385af]">Pending</SelectItem>
+                                                <SelectItem value="approved" className="hover:bg-[#d385af]">Approved</SelectItem>
+                                                <SelectItem value="rejected" className="hover:bg-[#d385af]">Rejected</SelectItem>
+                                                <SelectItem value="completed" className="hover:bg-[#d385af]">Completed</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
