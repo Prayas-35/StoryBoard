@@ -455,7 +455,7 @@ export default function StoryMiniGame() {
 
       <Card className="max-w-4xl mx-auto mt-12">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-white">Top Readers Leaderboard</CardTitle>
+          <CardTitle className="text-2xl font-bold text-black">Top Readers Leaderboard</CardTitle>
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[200px] w-full rounded-md p-4">

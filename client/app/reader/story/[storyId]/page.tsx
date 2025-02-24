@@ -1,6 +1,6 @@
 "use client"
 
-import { Book, Clock, User, UsersRound, Sticker, Info, Tag, Target, Calendar, MapPin, Layers, Gamepad2 } from "lucide-react"
+import { Book, Clock, User, UsersRound, Sticker, Info, Tag, Target, Calendar, MapPin, Layers, Gamepad2, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -166,6 +166,12 @@ export default function StoryDetails() {
                         <Button size="lg">
                             <Gamepad2 className="w-5 h-5 mr-2" />
                             Play Games
+                        </Button>
+                    </Link>
+                    <Link href={`/reader/perks/${storyId}`} className="ms-4">
+                        <Button size="lg">
+                            <Trophy className="w-5 h-5 mr-2" />
+                            Perks
                         </Button>
                     </Link>
                 </div>
