@@ -260,6 +260,24 @@ const QuizSchema = new mongoose.Schema({
     }
 });
 
+const PointSchema = new mongoose.Schema({
+    point: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    story: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Story',
+        required: true
+    }
+});
+
 const Story = mongoose.models.Story || mongoose.model('Story', StorySchema);
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Chapter = mongoose.models.Chapter || mongoose.model('Chapter', ChapterSchema);
@@ -267,4 +285,6 @@ const StorySettings = mongoose.models.StorySettings || mongoose.model('StorySett
 const StoryStatus = mongoose.models.StoryStatus || mongoose.model('StoryStatus', StoryStatusSchema);
 const EndgameProtocol = mongoose.models.EndgameProtocol || mongoose.model('EndgameProtocol', EndgameProtocolSchema);
 const Brand = mongoose.models.Brand || mongoose.model('Brand', BrandSchema);
-export { Story, User, Chapter, StorySettings, StoryStatus, EndgameProtocol, Brand };
+const Point = mongoose.models.Point || mongoose.model('Point', PointSchema);
+
+export { Story, User, Chapter, StorySettings, StoryStatus, EndgameProtocol, Brand, Point };
