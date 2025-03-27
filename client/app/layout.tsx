@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Providers from "./providers/provider";
+import Providers from "./_providers/provider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Red_Hat_Text } from "next/font/google";
 import { RoleProvider } from "./_contexts/roleContext";

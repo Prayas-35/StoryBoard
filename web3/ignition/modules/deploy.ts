@@ -5,12 +5,9 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);
 
-    // Get the ContractFactory for the contract
-    const PRESALE_DURATION = 7 * 24 * 60 * 60; // 7 days in seconds
-
     // Deploy the contract
     const StoryToken = await ethers.getContractFactory("StoryToken");
-    const storyToken = await StoryToken.deploy(PRESALE_DURATION, deployer.address);
+    const storyToken = await StoryToken.deploy(deployer.address);
 
     // Wait for the deployment to complete
     await storyToken.waitForDeployment();

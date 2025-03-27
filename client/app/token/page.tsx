@@ -14,22 +14,32 @@ import {
 import { ArrowDown, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useGasPrice, useWriteContract } from "wagmi";
-import { polygonAmoy } from "wagmi/chains";
+import { useGasPrice, useWriteContract, useReadContract } from "wagmi";
+import { lineaSepolia } from "wagmi/chains";
 import { formatEther, parseEther } from "viem";
 import { abi, contractAddress } from "../abi";
 
 export default function TokenSwap() {
-  const { data: gasData, refetch } = useGasPrice({
-    chainId: polygonAmoy.id,
+  const { data: gasData, refetch: refetchGas } = useGasPrice({
+    chainId: lineaSepolia.id,
   });
-  const [polAmount, setPolAmount] = useState("");
+  const [ethAmount, setEthAmount] = useState("");
   const [storyAmount, setStoryAmount] = useState("");
   const [gasFee, setGasFee] = useState("0.000");
   const [isLoading, setIsLoading] = useState(false);
 
   const { writeContractAsync } = useWriteContract();
   const exchangeRate = 10000;
+
+  const { data: calculatedStory } = useReadContract({
+    abi: abi,
+    address: contractAddress,
+    functionName: "getTokensForEth",
+    args: ethAmount ? [parseEther(ethAmount)] : [BigInt(0)],
+  });
+
+  console.log("calculatedStory", calculatedStory);
+  console.log("ethAmount", ethAmount);
 
   function handleSwap() {
     setIsLoading(true);
@@ -38,8 +48,8 @@ export default function TokenSwap() {
       {
         abi: abi,
         address: contractAddress,
-        functionName: "buyPresaleTokens",
-        value: parseEther(polAmount),
+        functionName: "buyTokens",
+        value: parseEther(ethAmount),
       },
       {
         onSuccess: () => {
@@ -53,26 +63,36 @@ export default function TokenSwap() {
     setIsLoading(false);
   }
 
+  // useEffect(() => {
+  //   // const calculatedStory = Number.parseFloat(ethAmount) * exchangeRate;
+  //   setStoryAmount(calculatedStory ? calculatedStory.toString() : '0');
+  // }, [ethAmount]);
+
   useEffect(() => {
-    const calculatedStory = Number.parseFloat(polAmount) * exchangeRate;
-    setStoryAmount(isNaN(calculatedStory) ? "" : calculatedStory.toString());
-  }, [polAmount]);
+    if (calculatedStory !== undefined) {
+      if (calculatedStory) {
+        setStoryAmount(calculatedStory ? calculatedStory.toString() : '0'); // Convert to readable format
+      }
+    }
+  }, [calculatedStory, ethAmount]);
+
+  console.log("storyAmount", storyAmount);
 
   useEffect(() => {
     const fetchGasFee = () => {
-      refetch().then(({ data }) => {
+      refetchGas().then(({ data }) => {
         if (data) {
           setGasFee(formatEther(data)); // Convert from Wei to ETH
         }
         console.log(data);
-        console.log("gasFee", gasFee);
+        // console.log("gasFee", gasFee);
       });
     };
 
     fetchGasFee();
     const interval = setInterval(fetchGasFee, 1000); // Fetch every second
     return () => clearInterval(interval);
-  }, [refetch]);
+  }, [refetchGas]);
 
   return (
     <>
@@ -103,8 +123,8 @@ export default function TokenSwap() {
                   id="eth-amount"
                   type="number"
                   placeholder="0.0"
-                  value={polAmount}
-                  onChange={(e) => setPolAmount(e.target.value)}
+                  value={ethAmount}
+                  onChange={(e) => setEthAmount(e.target.value)}
                   className="bg-gray-700 border-gray-600 text-white placeholder-gray-300"
                 />
                 <div className="text-sm">POL</div>
@@ -120,7 +140,7 @@ export default function TokenSwap() {
                   id="Story-amount"
                   type="number"
                   placeholder="0.0"
-                  value={storyAmount}
+                  value={storyAmount ? Number(formatEther(BigInt(storyAmount))).toFixed(3) : 0}
                   readOnly
                   className="bg-gray-700 border-gray-600 text-white placeholder-gray-300"
                 />
@@ -143,7 +163,7 @@ export default function TokenSwap() {
               className="w-full"
               variant="default"
               onClick={handleSwap}
-              disabled={!polAmount || isLoading}
+              disabled={!ethAmount || isLoading}
             >
               {isLoading ? (
                 <>

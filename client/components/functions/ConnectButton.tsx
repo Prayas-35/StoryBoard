@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { polygonAmoy } from "viem/chains";
+import { lineaSepolia } from "viem/chains";
 import { formatEther } from "viem";
 import { UserInterface } from "@/types";
 import { abi, contractAddress } from "@/app/abi";
@@ -29,7 +29,7 @@ export default function LoginButton() {
     const { login: roleLogin, roleLogout, role } = useRole();
     const balance = useBalance({
         address: address,
-        chainId: polygonAmoy.id,
+        chainId: lineaSepolia.id,
     });
     const router = useRouter()
 

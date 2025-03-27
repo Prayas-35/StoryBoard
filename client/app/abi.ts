@@ -2,11 +2,6 @@ export const abi = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_presaleDuration",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "initialOwner",
         "type": "address"
@@ -145,16 +140,6 @@ export const abi = [
   },
   {
     "inputs": [],
-    "name": "StoryToken__PresaleEnded",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "StoryToken__PresaleOngoing",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "StoryToken__ZeroTokenAmount",
     "type": "error"
   },
@@ -220,7 +205,7 @@ export const abi = [
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "polSpent",
+        "name": "ethSpent",
         "type": "uint256"
       }
     ],
@@ -245,7 +230,7 @@ export const abi = [
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "polReceived",
+        "name": "ethReceived",
         "type": "uint256"
       }
     ],
@@ -280,32 +265,6 @@ export const abi = [
   {
     "inputs": [],
     "name": "BURN_RATE",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "POL_UNIT",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "PRESALE_PRICE",
     "outputs": [
       {
         "internalType": "uint256",
@@ -412,14 +371,7 @@ export const abi = [
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "buyPresaleTokens",
-    "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -444,13 +396,6 @@ export const abi = [
   },
   {
     "inputs": [],
-    "name": "endPresale",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "getCurrentPrice",
     "outputs": [
       {
@@ -460,6 +405,25 @@ export const abi = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "ethAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTokensForEth",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -483,32 +447,6 @@ export const abi = [
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "presaleActive",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "presaleEndTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -984,5 +922,5 @@ export const pointTokenAbi = [
   }
 ];
 
-export const contractAddress = "0xf52ddC3c0b03543AE68E638aB7E0E6AC13f77d67";
-export const pointTokenAddress = "0x943e875aE202A0b7F38D12ded07EA953FAA8b83c";
+export const contractAddress = "0x60B543d0835f879F8F7D721Ba45BBb809Bba4a19";
+export const pointTokenAddress = "0x74Ce2e9ef64018a1f7b1A0F035782045d566ef4f";
