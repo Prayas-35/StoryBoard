@@ -9,6 +9,8 @@ contract StoryToken is ERC20, Ownable {
     using Math for uint256;
 
     // Custom errors for gas efficiency
+    error StoryToken__PresaleEnded();
+    error StoryToken__PresaleOngoing();
     error StoryToken__InsufficientBalance();
     error StoryToken__InsufficientTokens();
     error StoryToken__InsufficientFunds();
@@ -16,39 +18,83 @@ contract StoryToken is ERC20, Ownable {
     error StoryToken__ContractInsufficientFunds();
 
     // Tokenomics
+    uint256 public constant PRESALE_PRICE = 10000; // 10 STORY per 1 POL (1 ETH)
+    uint256 public constant POL_UNIT = 1 ether;
     uint256 public constant BURN_RATE = 2; // 2% burn per transaction
     uint256 public constant SCALE_FACTOR = 10; // Logarithmic scaling factor
+    uint256 public presaleEndTime;
     uint256 public totalSupplyCap = 1_000_000 * 10 ** 18; // Max token supply
+
+    bool public presaleActive = true;
 
     event TokensPurchased(
         address indexed buyer,
         uint256 amount,
-        uint256 ethSpent
+        uint256 polSpent
     );
     event TokensSold(
         address indexed seller,
         uint256 amount,
-        uint256 ethReceived
+        uint256 polReceived
     );
 
     /**
      * @dev Deploys the StoryToken contract.
+     * @param _presaleDuration Duration of the presale in seconds.
      * @param initialOwner Address of the initial owner.
      */
     constructor(
+        uint256 _presaleDuration,
         address initialOwner
     ) ERC20("StoryToken", "$STORY") Ownable(initialOwner) {
         _mint(address(this), totalSupplyCap); // Mint total supply to contract
+        presaleEndTime = block.timestamp + _presaleDuration;
+    }
+
+    /**
+     * @dev Modifier to ensure that the function is called only during the presale.
+     */
+    modifier onlyDuringPresale() {
+        if (!presaleActive || block.timestamp > presaleEndTime)
+            revert StoryToken__PresaleEnded();
+        _;
+    }
+
+    /**
+     * @dev Modifier to ensure that the function is called only after the presale has ended.
+     */
+    modifier onlyAfterPresale() {
+        if (presaleActive && block.timestamp <= presaleEndTime)
+            revert StoryToken__PresaleOngoing();
+        _;
+    }
+
+    /**
+     * @dev Allows users to buy tokens during the presale period.
+     */
+    function buyPresaleTokens() external payable onlyDuringPresale {
+        uint256 storyAmount = msg.value * PRESALE_PRICE;
+        if (balanceOf(address(this)) < storyAmount)
+            revert StoryToken__InsufficientTokens();
+        _update(address(this), msg.sender, storyAmount);
+        emit TokensPurchased(msg.sender, storyAmount, msg.value);
+    }
+
+    /**
+     * @dev Ends the presale period. Only callable by the owner.
+     */
+    function endPresale() external onlyOwner {
+        presaleActive = false;
     }
 
     /**
      * @dev Calculates the token price using a bonding curve.
      * @param tokenAmount The number of tokens to buy.
-     * @return The required ETH amount.
+     * @return The required POL (ETH) amount.
      */
     function bondingCurvePrice(
         uint256 tokenAmount
-    ) public pure returns (uint256) {
+    ) public view onlyAfterPresale returns (uint256) {
         if (tokenAmount == 0) revert StoryToken__ZeroTokenAmount();
         uint256 basePrice = 1 ether;
         uint256 logValue = Math.log10(tokenAmount + 1);
@@ -56,9 +102,9 @@ contract StoryToken is ERC20, Ownable {
     }
 
     /**
-     * @dev Allows users to buy tokens using ETH.
+     * @dev Allows users to buy tokens after the presale period at the bonding curve price.
      */
-    function buyTokens() external payable {
+    function buyTokens() external payable onlyAfterPresale {
         if (msg.value == 0) revert StoryToken__InsufficientFunds();
 
         uint256 tokenAmount = msg.value / bondingCurvePrice(1); // Calculate tokens based on price per token
@@ -71,7 +117,7 @@ contract StoryToken is ERC20, Ownable {
     }
 
     /**
-     * @dev Allows users to sell tokens back for ETH.
+     * @dev Allows users to sell tokens after the presale period at the bonding curve price.
      * @param tokenAmount The number of tokens to sell.
      */
     function sellTokens(uint256 tokenAmount, address to) external {
@@ -79,8 +125,21 @@ contract StoryToken is ERC20, Ownable {
             revert StoryToken__InsufficientBalance();
 
         _update(msg.sender, to, tokenAmount);
+
         emit TokensSold(msg.sender, tokenAmount, tokenAmount);
     }
+
+    // function sellForNow(uint256 tokenAmount) external {
+    //     if (balanceOf(msg.sender) < tokenAmount)
+    //         revert StoryToken__InsufficientBalance();
+
+    //     uint256 polAmount = bondingCurvePrice(tokenAmount);
+    //     if (address(this).balance < polAmount)
+    //         revert StoryToken__ContractInsufficientFunds();
+
+    //     _update(msg.sender, address(this), tokenAmount);
+    //     emit TokensSold(msg.sender, tokenAmount, polAmount);
+    // }
 
     /**
      * @dev Internal function to handle token transfers and burn mechanism.
@@ -105,21 +164,9 @@ contract StoryToken is ERC20, Ownable {
 
     /**
      * @dev Retrieves the current price of the token based on total supply.
-     * @return The current price in ETH.
+     * @return The current price in POL (ETH).
      */
     function getCurrentPrice() external view returns (uint256) {
         return bondingCurvePrice(totalSupply());
-    }
-
-    /**
-     * @dev Calculates the number of tokens that can be bought with a given ETH amount.
-     * @param ethAmount The amount of ETH to spend.
-     * @return The number of tokens that can be bought.
-     */
-    function getTokensForEth(
-        uint256 ethAmount
-    ) external pure returns (uint256) {
-        if (ethAmount == 0) revert StoryToken__ZeroTokenAmount();
-        return ethAmount / bondingCurvePrice(1 * 10 ** 18);
     }
 }

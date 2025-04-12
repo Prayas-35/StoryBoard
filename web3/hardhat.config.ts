@@ -1,38 +1,40 @@
 import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
 import "dotenv/config";
 import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-verify";
 
-const { RPC_URL_AMOY, PRIVATE_KEY, POLYGONSCAN_API, RPC_URL_LINEA, LINEASCAN_API } = process.env;
+const { RPC_URL_FUJI, RPC_URL_EDUCHAIN, PRIVATE_KEY, FUJI_API_KEY } = process.env;
 
 const config: HardhatUserConfig = {
   solidity: "0.8.28",
   networks: {
-    amoy: {
-      url: RPC_URL_AMOY || "",
-      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
-    },
-    lineaSepolia: {
-      url: `${RPC_URL_LINEA}`,
+    fuji: {
+      url: `${RPC_URL_FUJI}`,
       accounts: [`${PRIVATE_KEY}`],
-      chainId: 59141,
+      chainId: 43113,
+    },
+    eduChain: {
+      url: RPC_URL_EDUCHAIN,
+      chainId: 656476,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     },
   },
   etherscan: {
     apiKey: {
-      polygonAmoy: `${POLYGONSCAN_API}`,
-      lineaSepolia: `${LINEASCAN_API}`
+      avalancheFujiTestnet: `${FUJI_API_KEY}`,
+      'eduChain': 'empty'
     },
     customChains: [
       {
-        network: "lineaSepolia",
-        chainId: 59141,
+        network: "eduChain",
+        chainId: 656476,
         urls: {
-          apiURL: `https://api-sepolia.lineascan.build/api`,
-          browserURL: "https://sepolia.lineascan.build",
-        },
-      },
-    ],
+          apiURL: "https://edu-chain-testnet.blockscout.com/api",
+          browserURL: "https://edu-chain-testnet.blockscout.com"
+        }
+      }
+    ]
   },
   sourcify: {
     enabled: true,

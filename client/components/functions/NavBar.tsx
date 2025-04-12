@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { UserInterface } from "@/types";
 import { useAccount } from "wagmi";
+import { ConnectKitButton } from "connectkit";
 
 export default function NavBar() {
     const [role, setRole] = useState<string | null>(null);
@@ -97,7 +98,7 @@ export default function NavBar() {
                 </nav>
                 <div className="flex items-center gap-3">
                     <ModeToggle />
-                    <LoginButton />
+                    <ConnectKitButton />
                 </div>
             </div>
         </header>

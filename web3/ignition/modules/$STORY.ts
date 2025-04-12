@@ -4,7 +4,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
   // Get the ContractFactory for the contract
-  const Story = await ethers.deployContract("$STORY");
+  const Story = await ethers.deployContract("$STORY-BC");
 
   console.log("Deploying Story...");
 

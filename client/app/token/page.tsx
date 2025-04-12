@@ -73,6 +73,8 @@ export default function TokenSwap() {
       if (calculatedStory) {
         setStoryAmount(calculatedStory ? calculatedStory.toString() : '0'); // Convert to readable format
       }
+    } else {
+      setStoryAmount('0');
     }
   }, [calculatedStory, ethAmount]);
 
@@ -84,7 +86,7 @@ export default function TokenSwap() {
         if (data) {
           setGasFee(formatEther(data)); // Convert from Wei to ETH
         }
-        console.log(data);
+        // console.log(data);
         // console.log("gasFee", gasFee);
       });
     };
@@ -107,10 +109,10 @@ export default function TokenSwap() {
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
-              Swap POL for $STORY
+              Swap ETH for $STORY
             </CardTitle>
             <CardDescription className="text-center">
-              Exchange POL for $STORY tokens
+              Exchange ETH for $STORY tokens
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -127,7 +129,7 @@ export default function TokenSwap() {
                   onChange={(e) => setEthAmount(e.target.value)}
                   className="bg-gray-700 border-gray-600 text-white placeholder-gray-300"
                 />
-                <div className="text-sm">POL</div>
+                <div className="text-sm">ETH</div>
               </div>
               <div className="flex justify-center">
                 <ArrowDown />
@@ -150,11 +152,11 @@ export default function TokenSwap() {
             <div className="mt-6 text-sm">
               <div className="flex justify-between">
                 <span>Exchange rate:</span>
-                <span>1 POL = {exchangeRate.toLocaleString()} $STORY</span>
+                <span>1 ETH = {exchangeRate.toLocaleString()} $STORY</span>
               </div>
               <div className="flex justify-between mt-2">
                 <span>Estimated gas fee:</span>
-                <span>{gasFee} POL</span>
+                <span>{gasFee} ETH</span>
               </div>
             </div>
           </CardContent>
