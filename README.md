@@ -5,7 +5,7 @@
 ---
 
 ## **1. Introduction**
-StoryForge is a decentralized, interactive storytelling platform where creators, readers, and brands collaborate through Web3 mechanics. Combining AI-assisted writing, gamified reader engagement, and blockchain-based monetization, StoryForge enables a dynamic, reader-influenced storytelling experience.
+StoryBoard is a decentralized, interactive storytelling platform where creators, readers, and brands collaborate through Web3 mechanics. Combining AI-assisted writing, gamified reader engagement, and blockchain-based monetization, StoryBoard enables a dynamic, reader-influenced storytelling experience.
 
 ---
 
